@@ -1,0 +1,33 @@
+#include "dht.h"
+#define DHTTYPE  DHT22
+#define dht_apin D5 // Analog Pin sensor is connected to
+ 
+dht DHT;
+ 
+void setup(){
+ 
+  Serial.begin(9600);
+  delay(500);//Delay to let system boot
+  Serial.println("DHT22 Humidity & temperature Sensor\n\n");
+  delay(1000);//Wait before accessing Sensor
+  
+  Particle.subscribe("hook-response/temparature", myHandler, MY_DEVICES);
+ 
+}//end "setup()"
+ 
+void loop(){
+  //Start of Program 
+ 
+    DHT.read22(dht_apin);
+    
+    double temperature = DHT.temperature;
+    
+    Particle.publish("temperature", String(temperature), PRIVATE);
+    delay(30000);//Wait 30 seconds before accessing sensor again.
+  
+}// end loop
+
+void myHandler(const char *event, const char *data) {
+  // Handle the integration response
+}
+          
